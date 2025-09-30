@@ -49,12 +49,20 @@ def change_name():
     try:
         response = requests.post(url, data=encrypted_payload, headers=headers)
 
-        return jsonify({
-            "status_code": response.status_code,
-            "headers": dict(response.headers),
-            "raw_content": response.content.hex(),
-            "text": response.text
-        })
+        if response.status_code == 200:
+            return jsonify({
+                "new_nickname": new_name,
+                "status": "success",
+                "status_code": response.status_code,
+                "raw_content": response.content.hex()
+            })
+        else:
+            return jsonify({
+                "status": "failed",
+                "status_code": response.status_code,
+                "raw_content": response.content.hex(),
+                "text": response.text
+            })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
